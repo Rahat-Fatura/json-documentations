@@ -1,0 +1,105 @@
+/**
+    ? - İşaretli alanlar zorunlu değildir
+    ! - İşaretli alanlar zorunludur
+    @ - İşaretli alanlar kısmi zorunludur, belirtilen ilişkisel veri gönderilirse zorunludur
+*/
+
+{
+    "draft": true, //? true taslak, false direk gönderim, gönderilmezse otomatik true alır
+    "document": {
+        "External": {
+            "ID": "123", // ! Fatura id'si, gönderilmesi zorunludur
+            "RefNo": "123", // ! Fatura referans numarası, gönderilmesi zorunludur
+            "Type": "UygulamaAdı" // ! Uygulama adı, gönderilmesi zorunludur, taslak listesinde gözüken isimdir
+            // * ID ve Type sistemde Uniq olmalıdır, eğer aynı ID ve Type ile gönderim yapılırsa hata döner
+        },
+        "UBLVersion": "2.1", // ?
+        "CustomizationID": "TR1.2", // ?
+        "Type": "SATIS", // ? SATIS, IADE, TEVKIFAT, ISTISNA, IHRACKAYITLI tipleri olacak, bunlardan biri olmaması fatura sistem tarafından incelenip gerekli Tipi otomatik olarak atayacak
+        "Profile": "TEMELFATURA", // ?, Gönderilirse uygunluğu kontrol edilip izin verilecek yoksa kendisi parametrelerden otomatik atacak, IADE olması durumunda TEMEL yada ARŞİV olacak
+        "NumberOrSerie": "VA", // ?, Gönderilirse 16, 3 yada 2 hane olmak zorunda, 16 hane ise daha önce alıp almadığı kontrol edilecek, 3 yada 2 hane olma durumunda carinin mükellefiyetine göre kullanılabilirliği kontrol edilecek, gönderilmezse sistem otomatik olarak atayacak
+        "UUID": "uuid-schema", // ?, Göderilirse daha önce alınıp alınmadığı kontrol edilecek, gönderilmediyse başarılı olma durumunda yanıt olarak dönülecek
+        "IssueDateTime": "2022-11-25T10:10:05", // ! Fatura Tarih ve saati
+        "Notes": ["note1", "note2"], // ? Notlar
+        "CurrencyCode": "USD", // ?, Gönderilmezse varsayılan TRY değerini alır
+        "ExchangeRate": 10.24, // ?, Para birimi gönderilmez ve kur girilmezse güncel kur bilgisini alır
+        "TaxExemptions": {
+            "KDV": 123 // @Lines[i].KDV.Percent 0 ise gönderilebilir, eğer yine de gönderilmez ise otomatik 350 veya 351 alır. Hangi durumlarda neyi aldığını öğrenmek için tarafımıza danışabilirsiniz.
+        },
+        "Order": {
+            // ? Sipariş bilgileridir, bir adet sipariş gönderilebilir
+            // ! Eğer gönderilir ise Date ve Value zorunludur
+            "Date": "2022-01-01T00:00:00", // ? Sipariş tarihi
+            "Value": "12312312" // ? Sipariş numarası
+        },
+        "Despatches": [
+            // ? İrsaliye bilgileridir, birden fazla irsaliye gönderilebilir
+            // ! Eğer gönderilir ise Date ve Value zorunludur
+            {
+                "Date": "2022-01-01T00:00:00", // ? İrsaliye tarihi
+                "Value": "12312312" // ? İrsaliye numarası
+            },
+            {
+                "Date": "2022-01-01T00:00:00",
+                "Value": "12312312"
+            }
+        ],
+        "Customer": {
+            // ! Alıcı bilgileri
+            "TaxNumber": "4620427208", // ! IHRACAT olmaması durumunda 10 yada 11 hane zorunlu, vergi veya tc kimlik numarası
+            "TaxOffice": "KOCASİNAN", // ? Vergi dairesi
+            "Name": "Hightech Natural", // ! Alıcı adı
+            "Alias": "", // ? Gönderilmezse ve e-Faturaysa etiketteki ilk değeri alır. Eğer gönderilirse ve etiket bulunmuyorsa hata döner
+            "Address": "Barbaros Mah. Ak Zambak Sok. Uphill Towers A Blok K:16/92", // ! Alıcı adresi
+            "District": "Ataşehir", // ! Alıcı ilçesi
+            "City": "İstanbul", // ! Alıcı ili
+            "Country": "Türkiye", // ! Alıcı ülkesi
+            "PostalCode": null, // ? Alıcı posta kodu
+            "Phone": "216 688 51 00", // ? Alıcı telefon numarası
+            "Fax": "216 688 51 99", // ? Alıcı faks numarası
+            "Mail": "info@nesbilgi.com.tr", // ?, Mail gönderimi için gerekli
+            "Website": "http://nesbilgi.com.tr" // ? Alıcı web sitesi
+        },
+        "Lines": [
+            // ! Fatura kalemleri
+            {
+                "Name": "Kırmızı Kalem", // ! Kalemin adı
+                "Quantity": 5.1, // ! Kalemin miktarı
+                "UnitCode": "Adet", // ! İster kod listesi ister tarafımızca belirlenmiş olan açıklamalar ile gönderilebilir Örn. Adet veya C62, Kilogram veya KGM, Kalemin birim kodu
+                "Price": 18.24203, // ! Kalemin birim fiyatı
+                "KDV": {
+                    // ! KDV bilgileri
+                    "Percent": 18, // ! KDV oranı
+                    "Price": 124.214 // ?, Talep durumunda direkt olarak gözükmesi istenen değer gönderilebilir
+                },
+                "Allowance": {
+                    // ? İndirim bilgileri
+                    "Percent": 10, //?, İndirim varsa ve oran üzerinden indirim talep ediliyorsa gönderilir
+                    "Price": 25.23 //?, İndirim varsa ve tutar üzerinden indirim talep ediliyorsa gönderilir
+                },
+                "WithholdingTax": {
+                    // ? Tevkifat bilgileri
+                    "Code": 627 // ?, Tevkifat kodu
+                },
+                "AdditionalNames": {
+                    // ? Ek adlar
+                    "Description": "Açıklama", // ? Ek ad açıklaması
+                    "Brand": "Marka", // ? Marka
+                    "Model": "Model", // ? Model
+                    "BuyerCode": "Alıcı Kodu", // ? Alıcı kodu
+                    "SellerCode": "Satıcı Kodu", // ? Satıcı kodu
+                    "ManufacturerCode": "Üretici Kodu", // ? Üretici kodu
+                    "Origin": "Menşei", // ? Menşei
+                    "Note": "not" // ? Not
+                },
+                "Taxes": [
+                    // ? Diğer vergiler
+                    {
+                        "Percent": 18, // ? Diğer vergi oranı
+                        "Code": "0015" // ? Diğer vergi kodu
+                    }
+                ]
+            }
+        ]
+    }
+}
