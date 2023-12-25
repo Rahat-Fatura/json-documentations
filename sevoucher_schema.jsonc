@@ -16,8 +16,6 @@
         },
         "UBLVersion": "2.1", // ?
         "CustomizationID": "TR1.2", // ?
-        "Type": "SATIS", // ? SATIS, IADE, TEVKIFAT, ISTISNA, IHRACKAYITLI tipleri olacak, bunlardan biri olmaması fatura sistem tarafından incelenip gerekli Tipi otomatik olarak atayacak
-        "Profile": "TEMELFATURA", // ?, Gönderilirse uygunluğu kontrol edilip izin verilecek yoksa kendisi parametrelerden otomatik atacak, IADE olması durumunda TEMEL yada ARŞİV olacak
         "NumberOrSerie": "VA", // ?, Gönderilirse 16, 3 yada 2 hane olmak zorunda, 16 hane ise daha önce alıp almadığı kontrol edilecek, 3 yada 2 hane olma durumunda carinin mükellefiyetine göre kullanılabilirliği kontrol edilecek, gönderilmezse sistem otomatik olarak atayacak
         "UUID": "uuid-schema", // ?, Göderilirse daha önce alınıp alınmadığı kontrol edilecek, gönderilmediyse başarılı olma durumunda yanıt olarak dönülecek
         "IssueDateTime": "2022-11-25T10:10:05", // ! Fatura Tarih ve saati
@@ -27,24 +25,6 @@
         "TaxExemptions": {
             "KDV": 123 // @Lines[i].KDV.Percent 0 ise gönderilebilir, eğer yine de gönderilmez ise otomatik 350 veya 351 alır. Hangi durumlarda neyi aldığını öğrenmek için tarafımıza danışabilirsiniz.
         },
-        "Order": {
-            // ? Sipariş bilgileridir, bir adet sipariş gönderilebilir
-            // ! Eğer gönderilir ise Date ve Value zorunludur
-            "Date": "2022-01-01T00:00:00", // ? Sipariş tarihi
-            "Value": "12312312" // ? Sipariş numarası
-        },
-        "Despatches": [
-            // ? İrsaliye bilgileridir, birden fazla irsaliye gönderilebilir
-            // ! Eğer gönderilir ise Date ve Value zorunludur
-            {
-                "Date": "2022-01-01T00:00:00", // ? İrsaliye tarihi
-                "Value": "12312312" // ? İrsaliye numarası
-            },
-            {
-                "Date": "2022-01-01T00:00:00",
-                "Value": "12312312"
-            }
-        ],
         "Customer": {
             // ! Alıcı bilgileri
             "TaxNumber": "4620427208", // ! IHRACAT olmaması durumunda 10 yada 11 hane zorunlu, vergi veya tc kimlik numarası
